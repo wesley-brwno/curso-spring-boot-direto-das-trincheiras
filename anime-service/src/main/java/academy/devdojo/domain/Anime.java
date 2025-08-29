@@ -14,8 +14,9 @@ public class Anime {
 
     private Long id;
     private String name;
+    private static List<Anime> animeList = new ArrayList<>();
 
-    public static List<Anime> hardCoded() {
+    static {
         List<Anime> list = new ArrayList<>();
 
         list.add(Anime.builder()
@@ -43,6 +44,11 @@ public class Anime {
                 .name("Digimon")
                 .build());
 
-        return list;
+        animeList = list;
+    }
+
+
+    public static List<Anime> hardCoded() {
+        return animeList;
     }
 }

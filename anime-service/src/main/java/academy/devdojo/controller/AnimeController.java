@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @RestController
@@ -30,5 +31,12 @@ public class AnimeController {
                 .filter(anime -> anime.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @PostMapping
+    public Anime save(@RequestBody Anime anime) {
+        anime.setId(ThreadLocalRandom.current().nextLong(1, 1000));
+        Anime.hardCoded().add(anime);
+        return anime;
     }
 }
