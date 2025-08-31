@@ -48,7 +48,7 @@ public class ProducerHardCodedRepository {
     }
 
 
-    public static List<Producer> findAll() {
+    public List<Producer> findAll() {
         return producers;
     }
 
