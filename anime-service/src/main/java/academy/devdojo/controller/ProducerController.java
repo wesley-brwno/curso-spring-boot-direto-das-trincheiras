@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ProducerController {
                         .filter(producer -> producer.getId().equals(id))
                         .findFirst()
                         .map(MAPPER::toProducerGetResponse)
-                        .orElse(null));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not Found")));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key=1234")
@@ -61,5 +62,18 @@ public class ProducerController {
         var response = MAPPER.toProducerGetResponse(producer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        log.debug("Request to delete producer by id: {}", id);
+        Producer producerToDelete = Producer.hardCoded()
+                .stream()
+                .filter(producer -> producer.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not Found"));
+
+        Producer.hardCoded().remove(producerToDelete);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
