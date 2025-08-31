@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -22,23 +23,31 @@ public class ProducerController {
     private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
     @GetMapping()
-    public List<Producer> listAllParam(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<ProducerGetResponse>> listAllParam(@RequestParam(required = false) String name) {
         if (Objects.isNull(name))
-            return Producer.hardCoded();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(Producer.hardCoded()
+                            .stream()
+                            .map(MAPPER::toProducerGetResponse)
+                            .toList());
 
-        return Producer.hardCoded()
-                .stream()
-                .filter(producer -> producer.getName().equalsIgnoreCase(name))
-                .toList();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Producer.hardCoded()
+                        .stream()
+                        .filter(producer -> producer.getName().equalsIgnoreCase(name))
+                        .map(MAPPER::toProducerGetResponse)
+                        .toList());
     }
 
     @GetMapping("{id}")
-    public Producer findById(@PathVariable Long id) {
-        return Producer.hardCoded()
-                .stream()
-                .filter(producer -> producer.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public ResponseEntity<ProducerGetResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Producer.hardCoded()
+                        .stream()
+                        .filter(producer -> producer.getId().equals(id))
+                        .findFirst()
+                        .map(MAPPER::toProducerGetResponse)
+                        .orElse(null));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key=1234")
