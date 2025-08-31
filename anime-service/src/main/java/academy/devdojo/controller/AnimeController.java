@@ -3,6 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.request.AnimePostRequest;
+import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,23 @@ public class AnimeController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
 
         Anime.hardCoded().remove(animeToDelete);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+        log.debug("Request to update an Anime {}", request);
+
+        Anime animeToRemove = Anime.hardCoded()
+                .stream()
+                .filter(anime -> anime.getId().equals(request.getId()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+
+        Anime animeUpdated = MAPPER.toAnime(request);
+        Anime.hardCoded().remove(animeToRemove);
+        Anime.hardCoded().add(animeUpdated);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
