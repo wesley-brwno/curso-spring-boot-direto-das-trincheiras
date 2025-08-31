@@ -1,6 +1,5 @@
 package academy.devdojo.controller;
 
-import academy.devdojo.domain.Anime;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.mapper.ProducerMapper;
 import academy.devdojo.request.ProducerPostRequest;
@@ -12,17 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @RestController
 @RequestMapping("v1/producers")
 public class ProducerController {
 
-    private static final ProducerMapper MAPPER = ProducerMapper.INSTACE;
+    private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
     @GetMapping()
     public List<Producer> listAllParam(@RequestParam(required = false) String name) {
