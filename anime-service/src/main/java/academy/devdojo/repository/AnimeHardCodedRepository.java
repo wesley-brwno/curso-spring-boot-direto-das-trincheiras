@@ -1,6 +1,10 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.domain.Anime;
+import external.dependency.Connection;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -8,8 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
+@Log4j2
 public class AnimeHardCodedRepository {
     private static List<Anime> animeList = new ArrayList<>();
+    @Qualifier(value = "connectionMySql")
+    private final Connection connection;
 
     static {
         List<Anime> list = new ArrayList<>();
@@ -52,6 +60,7 @@ public class AnimeHardCodedRepository {
     }
 
     public List<Anime> findByName(String name) {
+        log.debug(connection);
         return animeList.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
     }
 
