@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface AnimeMapper {
 
@@ -19,4 +21,6 @@ public interface AnimeMapper {
     Anime toAnime(AnimePutRequest request);
 
     AnimeGetResponse toAnimeGetResponse(Anime anime);
+
+    List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animeList);
 }
